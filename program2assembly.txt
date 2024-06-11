@@ -1,12 +1,12 @@
 mov 101, 000
-mov 110, 001
+mov 110, 001    // L1:
 lwd 000, 101 
 lwd 100, 101
 add 101, 110
 lwd 010, 101
 mov 111, 000
 add 111, 101 
-mov 110, 001
+mov 110, 001    // L2:
 add 111, 110
 lwd 001, 101 
 add 111, 110
@@ -17,8 +17,8 @@ mov 110, 000
 add 110, 110 
 mov 100, 000
 add 110, 100 
-bgt 00000
-not 001
+bgt 00100       // bgt Case 
+not 001         // Case 2:
 not 011
 mov 100, 001
 add 011, 100
@@ -31,37 +31,37 @@ add 100, 010
 add 010, 011 
 add 000, 001
 add 110, 001
-bgt 00001
-beq 01000
-not 000
+bgt 00101       // bgt FINISH
+beq 01100       // bgt CHECK_LSBs
+not 000         // COMP RESULT:
 not 010
 mov 100, 001
 add 010, 100
 mov 100, 000
 add 000, 100
 add 100, 100
-beq 00001
-mov 001, 001
+beq 00101       // beq FINISH
+mov 001, 001    // CHECK_LSBs:
 not 011
 add 011, 001 
 add 100, 011
 add 100, 111
-beq 01001 
-bgt 00010
+beq 01101       // beq CLEAR
+bgt 00110       // bgt COMP RESULT
 add 100, 100
-beq 00001
-mov 000, 000
+beq 00101       // beq FINISH
+mov 000, 000    // CLEAR: 
 mov 010, 000
 add 100, 100
-beq 00001
-mov 100, 000
+beq 00101       // beq FINISH
+mov 100, 000    // Case 1:
 add 100, 000 
 lsl 100 
 mov 110, 000
 add 110, 110  
 mov 100, 000
 add 110, 100 
-bgt 00011
+bgt 00111       // bgt num1 NEG
 not 001
 not 011
 mov 100, 001
@@ -69,16 +69,16 @@ add 011, 100
 mov 100, 000
 add 001, 100 
 add 100, 100
-beq 01010
-not 000
+beq 01110       // beq DONE
+not 000         // num1 NEG:
 not 010
 mov 100, 001
 add 010, 100
 mov 100, 000
 add 000, 100 
-add 010, 011
+add 010, 011    // DONE:
 add 000, 001
-mov 110, 001
+mov 110, 001    // FINISH:
 lsl 110
 lsl 110
 lsl 110
@@ -92,23 +92,23 @@ lwd 001, 110
 mov 100, 000
 add 100, 000
 add 000, 001
-bgt 00100
-beq 01011
+bgt 01000       // bgt DONT CHANGE
+beq 01111       // beq CHECK LSBS
 str 100, 110
 mov 001, 001
 add 110, 001
 str 010, 110
 add 001, 001
-beq 00100
-mov 001, 001
+beq 01000       // beq DONT CHANGE
+mov 001, 001    // CHECK LSBS:
 add 110, 001
 lwd 011, 110
 mov 000, 000
 add 000, 010
 add 010, 011
-bgt 00100
+bgt 01000       // bgt DONT CHANGE
 str 000, 110
-mov 011, 001
+mov 011, 001    // DONT CHANGE:
 mov 110, 100
 lsl 110
 lsl 110
@@ -120,19 +120,19 @@ add 110, 011
 add 110, 011
 lwd 001, 110
 add 001, 100
-bgt 00101
-beq 01100
+bgt 01001       // bgt DONEE
+beq 10000       // beq CHECK LSBS AGAIN
 str 100, 110
 add 110, 011
 str 000, 110
 add 011, 011
-beq 00101
-add 110, 011
+beq 01001       // beq DONEE
+add 110, 011    // CHECK LSBS AGAIN:
 lwd 011, 110
 add 011, 000
-bgt 00101
+bgt 01001       // bgt DONEE
 str 000, 110
-mov 110, 001
+mov 110, 001    // DONEE: L3:
 add 101, 110
 lsl 110
 lsl 110
@@ -146,12 +146,12 @@ add 110, 000
 mov 001, 000
 add 001, 000
 add 110, 101
-bgt 00110
+bgt 01010       // bgt L2
 mov 000, 010
 not 000
 add 001, 000
 mov 110, 001
 add 101, 110
 add 001, 101
-bgt 00111
+bgt 01011       // bgt L1
 don 000, 000
