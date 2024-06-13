@@ -14,9 +14,9 @@ module test_bench;
   logic signed[15:0] Tmp[32];	      // caches all 16-bit values
   logic signed[16:0] diff;		      // signed difference -- Dist = abs(diff)
 
-  DUT D1(.clk  (clk  ),	              // your design goes here
-		 .start(start),
-		 .done (done )); 
+  Top D1(.Clk  (clk  ),	              // your design goes here
+		 .Reset(start),
+		 .Done (done )); 
 
 always begin
   #50ns clk = 'b1;
@@ -30,6 +30,9 @@ int max_pass = 0;
 
 
 initial begin
+  $dumpfile("dump.vcd"); 
+  $dumpvars;
+  $readmemb("program2machine_code.txt",D1.IR1.Core);
 // load operands for program 1 into data memory
 // 32 double-precision operands go into data_mem [0:63]
 // first operand = {data_mem[0],data_mem[1]}  
@@ -39,26 +42,26 @@ initial begin
 	Min = 'hffff;						     // start test bench Min at max value
 	Max = 'h0;						         // start test bench Max at min value
     case(loop_ct)
-        0: $readmemb("test0.txt",D1.dm.core);
-	    1: $readmemb("test1.txt",D1.dm.core);
-        2: $readmemb("test2.txt",D1.dm.core);
-	    3: $readmemb("test3.txt",D1.dm.core);
-        4: $readmemb("test4.txt",D1.dm.core);
-        5: $readmemb("test5.txt",D1.dm.core);
-        6: $readmemb("test6.txt",D1.dm.core);
-	    7: $readmemb("test7.txt",D1.dm.core);
-        8: $readmemb("test8.txt",D1.dm.core);
-        9: $readmemb("test9.txt",D1.dm.core);
+        0: $readmemb("test0.txt",D1.DM1.core);
+	    1: $readmemb("test1.txt",D1.DM1.core);
+        2: $readmemb("test2.txt",D1.DM1.core);
+	    3: $readmemb("test3.txt",D1.DM1.core);
+        4: $readmemb("test4.txt",D1.DM1.core);
+        5: $readmemb("test5.txt",D1.DM1.core);
+        6: $readmemb("test6.txt",D1.DM1.core);
+	    7: $readmemb("test7.txt",D1.DM1.core);
+        8: $readmemb("test8.txt",D1.DM1.core);
+        9: $readmemb("test9.txt",D1.DM1.core);
     endcase
     for(int i=0; i<32; i++) begin
-      Tmp[i] = {D1.dm.core[2*i],D1.dm.core[2*i+1]};	  // load values into mem, copy to Tmp array
+      Tmp[i] = {D1.DM1.core[2*i],D1.DM1.core[2*i+1]};	  // load values into mem, copy to Tmp array
       $display("%d:  %d",i,Tmp[i]);
 	end
 // do not preload core[64:65] -- these are used by program 1
-    D1.dm.core[66] = 'hffff;		         // preset DUT final Min to max possible
-    D1.dm.core[67] = 'hffff;
+    D1.DM1.core[66] = 'hffff;		         // preset DUT final Min to max possible
+    D1.DM1.core[67] = 'hffff;
     for(int r=68; r<256; r++)
-	  D1.dm.core[r] = 'd0;		             // preset DUT final Max to min possible 
+	  D1.DM1.core[r] = 'd0;		             // preset DUT final Max to min possible 
 // 	compute correct answers
     for(int j=0; j<32; j++) begin			 // triangular half of 32x32 matrix, minus the major diagonal
       for(int k=j+1; k<32; k++) begin		 // steps through all 2-different-element combinations (not permutations)
@@ -79,7 +82,7 @@ initial begin
     #200ns wait (done);						 // avoid false done signals on startup
 
 // check results in data_mem[66:67] and [68:69] (Minimum and Maximum distances, respectively)
-    if(Min == {D1.dm.core[66],D1.dm.core[67]}) begin
+    if(Min == {D1.DM1.core[66],D1.DM1.core[67]}) begin
         $display("good Min = %d",Min);     // your DUT put correct answer into core[66:67]
         min_pass++;
     end
@@ -88,9 +91,9 @@ initial begin
       $display("Min addr = %d, %d",Min1, Min2);
       $display("Min valu = %d %d",Tmp[Min1], Tmp[Min2]);
       //{D1.dm.core[2*Min1],D1.dm.core[2*Min1+1]},{D1.dm.core[2*Min2],D1.dm.core[2*Min2+1]});
-    end
+  end 
 
-	if(Max == {D1.dm.core[68],D1.dm.core[69]}) begin
+	if(Max == {D1.DM1.core[68],D1.DM1.core[69]}) begin
         $display("good Max = %d",Max);	 // your DUT put correct answer into core[68:69]
         max_pass++;
     end
