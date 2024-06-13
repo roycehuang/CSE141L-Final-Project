@@ -1,5 +1,5 @@
-// Java program to read content from one file
-// and write it into another file
+// Java program to read assembly code from one file
+// and write it as machine code into another file
  
 
 import java.io.FileReader;
@@ -12,14 +12,14 @@ class assembler {
     {
 
         try {
-            FileReader fr = new FileReader("program2assembly.txt");
+            FileReader fr = new FileReader("test-asm3.txt");
             BufferedReader br = new BufferedReader(fr);
-            FileWriter fw = new FileWriter("program2machine_code.txt");
+            FileWriter fw = new FileWriter("test-newmach3.txt");
 
             String line;
  
             while ((line = br.readLine()) != null) {
-                //System.out.println(line);
+                //System.out.println(line);fvc
 
                 String opcode = line.substring(0,3); // end index is exclusive
                 String temp;
