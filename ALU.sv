@@ -50,12 +50,15 @@ always @* begin
           */
         end
         2'b10: begin // Right Shift Logical
+          Rslt = (DatA >> 1);
+          /*
           if(odd) begin
             {Rslt, Co} = (DatA >> 1'b1) || {SCi, 7'b0}; // logical right shift by SCi, replaced with zeros
           end
           else begin
             {Rslt, Co} = (DatA >> 1'b1);
           end
+          */
         end
         2'b11: begin // Right Shift Arithmetic
           if(odd) begin
@@ -65,7 +68,7 @@ always @* begin
             {Rslt, Co} = (DatA >>> 1'b1); // normal arithmetic right shift
           end
         end
-        2'b01: Rslt		= ~DatA + 1;        // bitwise NOT
+        2'b01: Rslt		= ~DatA;        // bitwise NOT
       endcase
     end
     /*
