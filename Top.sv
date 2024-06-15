@@ -27,8 +27,6 @@ module Top(
             Ci,     //carry in
 			SCo,      // ALU shift
   			SCi,		 // ALU shift
-  			SCarry,
-  			Carry,
 			WenR,		 // RF write enable
 			WenD,		 // DM write enable
             ImmToReg,
@@ -36,26 +34,40 @@ module Top(
             Load,
             Store,
             gt,
-  			gtFlag,
             eq,
             bmode,
   			clear;
-  logic		odd;
+  logic		odd,
+  			SCarry,
+  			Carry,
+  			gtFlag,
+  			eqFlag;
 
 //assign SCi = SCo;
 //assign Ci = Co;
   
+always_ff @(posedge Clk) begin
+  gtFlag <= gt;
+  eqFlag <= eq;
+  Carry <= Co;
+  SCarry <= SCo;
+end
+  
+/*
 Flags F1(
   .Clk,
   .SCi(SCo),
   .Ci(Co),
   .Gt(gt),
+  .Eq(eq),
   .Res(Reset),
   .Clear(clear),
   .SCarry,
   .Carry,
-  .gtFlag
+  .gtFlag,
+  .eqFlag
 );
+*/
 
 ImmToRegMux Mux1(
   .in1(DatA),
@@ -94,7 +106,7 @@ Ctrl C1(
   .bmode,
   .Jptr,
   .gt(gtFlag),
-  .eq,
+  .eq(eqFlag),
   .Ra,
   .Rb,
   .Imm,

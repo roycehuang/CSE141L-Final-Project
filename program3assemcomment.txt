@@ -1,0 +1,281 @@
+R0 - Upper MSB of answer
+R1 - Upper LSB of answer
+R2 - Lower MSB of answer
+R3 - Lower LSB of answer
+R4 - MSB of A
+R5 - LSB of A
+
+And then 
+R6 - index into datamem
+R7 - free register to hold immediate values to add substract
+
+------------------------------------------------
+
+don 000, 001
+mov r0, 0  # initialize index N
+L1: 
+lwd 1, r0 
+mov r6, 1
+add r0, r6
+lwd r2, r0
+add r0, r6
+lwd r3, r0
+add r0, r6
+lwd r4, r0
+
+# Check if operand 1 is 0
+mov r7, 0
+mov r6, 0
+add r7, r2 # makes a copy of LSB(A)
+add r7, r6
+bgt Check if operand 2 is 0
+mov r7, 0
+mov r6, 0
+add r7, 1
+add r7, r6
+bgt Check if operand 2 is 0
+add r6, r6
+beq Done
+mov 111, 000            // Check if operand 2 is 0:
+mov 110, 000
+add 111, 100
+add 111, 110
+Bgt 10100               // bgt Check if operand 1 is positive
+Mov 111, 000
+mov 110, 000
+add 111, 001 
+add 111, 110
+Bgt 10100               // bgt Check if operand 1 is positive
+add 110, 110
+beq 10011               // beq Done
+
+
+mov 110, 000            // Check if operand 1 is positive:
+add 110, 001 
+lsl 110
+mov 110, 000
+add 110, 110 
+mov 111, 000
+add 111, 110 
+beq 10101               // beq Check if operand 2 is positive
+Not 001
+Not 010
+mov 111, 001
+Add 010, 111
+mov 111, 000
+Add 001, 111
+mov 110, 000            // Check if operand 2 is negative:
+xor 110, 011
+lsl 110 
+mov 110, 000
+add 110, 110
+mov 111, 001
+add 111, 110
+beq 10110               // beq 2's comp op 2 positive(op1 is negative, op 2 is negative)
+add r6, r6
+beq 2's comp op 2 negative(op 1 is positive, op 2 is negative)
+// Check if operand 2 is positive
+mov r6, 0
+xor r6, r3 # r6 = MSB(B0) ^ 0
+lsl r6 # r6 << 1 # carry out = 0 if operand 2 is positive, carry out = 1 if operand is negative
+mov r6, 0
+add r6, r6 # r6 holds carry out: r6 = 0 + 0 + cin
+// If operand 2 is positive
+mov r7, 0
+add r7, r6 #  r6 holds MSBit of operand 1, if 0 then positive, if 1 then negative
+beq PositiveResult (op1 positive, op2 positive)
+force branch 2's comp op 2 negative (op1 positive, op2 negative)
+
+2's comp op 2 negative:
+Not r3
+Not r4
+mov r7, 1
+Add r4, r7
+mov r7, 0
+Add r3, r7
+add r6, r6
+beq NegativeResult
+
+2's comp op 2 positive:
+Not r3
+Not r4
+mov r7, 1
+Add r4, r7
+mov r7, 0
+Add r3, r7
+add r6, r6
+beq PositiveResult
+
+PositiveResult:  -------------------------------------------------
+// Add a to itself b times
+mov r5, 4
+lsl r5
+lsl r5
+lsl r5
+lsl r5 # r5 holds 64
+add r5, r0 # add offset to 64
+
+L2:
+lwd r7, r5 # r7 = datamem[answer idx of LSB0]
+add r7, r2 # add lower lower bits of A to sum
+str r7, r5 # datamem[answer idx of LSB0] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 66, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of LSB1]
+add r7, r1 # add upper lower bits of A to sum + overflow
+str r7, r5 # datamem[answer idx of LSB1] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 65, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB0]
+mov r6, 0
+add r7, r6 # r7 = r7 + 0 + overflow
+str r7, r5 # datamem[answer idx of MSB0] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 64, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB1]
+mov r6, 0
+add r7, r6 # r7 = r7 + 0 + overflow
+str r7, r5 # datamem[answer idx of MSB1] = sum + a
+mov r7, 1
+not r7
+add r4, r7 # b plus -1 to bottom half 
+add r3, r7 # b plus -1 to the top half + carryout
+// Check if b is greater than 0
+mov r7, 0
+mov r6, 0
+add r6, r4 # makes copy of LSB(B)
+add r6, r7 # sets gt flag if LSB(B) > 0
+bgt L2
+# here we know LSB(B) equals 0, so we have to check upper half
+mov r7, 0
+mov r6, 0
+add r6, r3 # makes copy of MSB(B)
+add r6, r7 # sets gt flag if MSB(B) > 0
+bgt L2
+
+# force branch 
+add r6, r6
+#beq Done
+
+NegativeResult: -------------------------------------------------
+mov r5, 4
+lsl r5
+lsl r5
+lsl r5
+lsl r5 # r5 holds 64
+add r5, r0 # add offset to 64
+
+L2:
+lwd r7, r5 # r7 = datamem[answer idx of LSB0]
+add r7, r2 # add lower lower bits of A to sum
+str r7, r5 # datamem[answer idx of LSB0] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 66, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of LSB1]
+add r7, r1 # add upper lower bits of A to sum + overflow
+str r7, r5 # datamem[answer idx of LSB1] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 65, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB0]
+mov r6, 0
+add r7, r6 # r7 = r7 + 0 + overflow
+str r7, r5 # datamem[answer idx of MSB0] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 64, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB1]
+mov r6, 0
+add r7, r6 # r7 = r7 + 0 + overflow
+str r7, r5 # datamem[answer idx of MSB1] = sum + a
+mov r7, 1
+not r7
+add r4, r7 # b plus -1 to bottom half 
+add r3, r7 # b plus -1 to the top half + carryout
+// Check if b is greater than 0
+mov r7, 0
+mov r6, 0
+add r6, r4 # makes copy of LSB(B)
+add r6, r7 # sets gt flag if LSB(B) > 0
+bgt L2
+# here we know LSB(B) equals 0, so we have to check upper half
+mov r7, 0
+mov r6, 0
+add r6, r3 # makes copy of MSB(B)
+add r6, r7 # sets gt flag if MSB(B) > 0
+bgt L2
+
+// Check if operands have different signs (2’s comp the result)
+mov r5, 4
+lsl r5
+lsl r5
+lsl r5
+lsl r5 # r5 holds 64
+add r5, r0 # add offset to 64
+
+lwd r7, r5 # r7 = datamem[answer idx of LSB0]
+not r7
+str r7, r5 # datamem[answer idx of LSB0] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 66, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of LSB1]
+not r7
+str r7, r5 # datamem[answer idx of LSB1] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 65, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB0]
+not r7
+str r7, r5 # datamem[answer idx of MSB0] = sum + a
+mov r7, 1
+not r7
+add r5, r7 # holds 64, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB1]
+not r7
+str r7, r5 # datamem[answer idx of MSB1] = sum + a
+mov r7, 3
+add r5, r7  # goes from 64 back to 67
+mov r6, 1
+lwd r7, r5 # r7 = datamem[answer idx of LSB0]
+add r7, r6
+str r7, r5
+mov r7, 1
+not r7
+add r5, r7 # holds 66, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of LSB1]
+mov r6, 0
+add r7, r6 # add to get overflow
+str r7, r5
+mov r7, 1
+not r7
+add r5, r7 # holds 65, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB0]
+mov r6, 0
+add r7, r6 # add to get overflow
+str r7, r5
+mov r7, 1
+not r7
+add r5, r7 # holds 64, r5 = answer idx - 1
+lwd r7, r5 # r7 = datamem[answer idx of MSB1]
+mov r6, 0
+add r7, r6 # add to get overflow
+str r7, r5
+
+Done:
+// If index N < 60
+Mov r7, 4
+Lsl r7 # 8
+Lsl r7 # 16
+Lsl r7 #32
+Lsl r7 #64
+mov r6, 4
+not r6
+Mov r5, 1
+Add r6, r5
+Add r7, r6 # r7 holds 60
+don 000, 000

@@ -1,5 +1,5 @@
-// Java program to read content from one file
-// and write it into another file
+// Java program to read assembly code from one file
+// and write it as machine code into another file
  
 
 import java.io.FileReader;
