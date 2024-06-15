@@ -29,3 +29,12 @@ end
 NOTE: Our implementation of program 3 works by adding A to itself B times
 - Takes quite a while to run
 - Use simpletest.txt instead of given test files to see that it's working for $\text{pos}*\text{pos}$, $\text{neg}*\text{neg}$, $\text{pos}*\text{neg}$, $\text{neg}*\text{pos}$ and relatively big numbers
+
+### Program 1: 
+Closest and Farthest Hamming Pairs 
+
+### Program 2:
+Closest and Farthest Arithmetic Pairs
+
+### Program 3:
+Double-precision (16x16 bits = 32-bit product) Two's Complement Multiplication
