@@ -28,7 +28,11 @@ end
 ```
 NOTE: Our implementation of program 3 works by adding A to itself B times
 - Takes quite a while to run
-- Use simpletest.txt instead of given test files to see that it's working for $\text{pos}*\text{pos}$, $\text{neg}*\text{neg}$, $\text{pos}*\text{neg}$, $\text{neg}*\text{pos}$ and relatively big numbers
+- Use simpletest.txt instead of given test files to see that it's working for the below cases and relatively large numbers
+ 	$$\text{pos} * \text{pos}$$
+ 	$$\text{neg}* \text{neg}$$
+ 	$$\text{pos}* \text{neg}$$
+   	$$\text{neg}* \text{pos}$$
 
 ### Program 1: 
 Closest and Farthest Hamming Pairs 
