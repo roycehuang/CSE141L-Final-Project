@@ -1,20 +1,33 @@
+don 000, 001
 mov 101, 000
-mov 100, 000 
+mov 100, 000
 mov 110, 001
 lwd 000, 101
 add 101, 110
 lwd 010, 101
-mov 111, 000
+add 101, 110
+mov 111, 000        // Label 1
 add 111, 101
+mov 110, 001        // Label 2
+not 110
+mov 000, 001
+add 110, 000
+add 101, 110
+mov 000, 001
+add 101, 110
+lwd 000, 101
 mov 110, 001
-add 111, 110
+add 101, 110
+lwd 010, 101
+add 101, 110
 lwd 001, 111
 add 111, 110
 lwd 011, 111
 xor 000, 001
 xor 010, 011
-lsl 000 
+mov 100, 000
 mov 001, 000
+lsl 000
 add 100, 001
 lsl 000
 add 100, 001
@@ -62,14 +75,14 @@ add 010, 011
 add 011, 001 
 bgt 00000
 str 010, 110
-mov 000, 001
+mov 000, 001            // Label 3
 add 110, 000
 lwd 011, 110 
 add 011, 010
 bgt 00001
 str 010, 110
-mov 110, 001
-add 101, 110
+mov 110, 001            // Label 4
+add 111, 110
 lsl 110 
 lsl 110 
 lsl 110
@@ -78,16 +91,15 @@ lsl 110
 lsl 110
 mov 000, 001
 not 000
+mov 001, 001
+add 000, 001
 add 110, 000 
 mov 001, 000
-add 001, 000
-add 110, 101 
+add 001, 110
+add 110, 111 
 bgt 00010
 mov 000, 010
-not 000
-add 001, 000
-mov 110, 001
-add 101, 110
+add 101, 000
 add 001, 101
 bgt 00011
 don 000, 000

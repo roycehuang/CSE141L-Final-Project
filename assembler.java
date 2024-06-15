@@ -12,14 +12,14 @@ class assembler {
     {
 
         try {
-            FileReader fr = new FileReader("test-asm3.txt");
+            FileReader fr = new FileReader("program2assembly.txt");
             BufferedReader br = new BufferedReader(fr);
-            FileWriter fw = new FileWriter("test-newmach3.txt");
+            FileWriter fw = new FileWriter("checkprogram2machine_code.txt");
 
             String line;
  
             while ((line = br.readLine()) != null) {
-                //System.out.println(line);fvc
+                //System.out.println(line);
 
                 String opcode = line.substring(0,3); // end index is exclusive
                 String temp;

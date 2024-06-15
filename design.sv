@@ -9,4 +9,3 @@
 `include "DMem.sv"
 `include "ImmToRegMux.sv"
 `include "MemToRegMux.sv"
-`include "Flags.sv"

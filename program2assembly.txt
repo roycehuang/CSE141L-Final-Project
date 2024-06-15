@@ -1,139 +1,191 @@
+don 000, 001
 mov 101, 000
-mov 110, 001    // L1:
+mov 110, 001
 lwd 000, 101 
-lwd 100, 101
 add 101, 110
 lwd 010, 101
-mov 111, 000
+add 101, 110
+mov 111, 000                //Label1
 add 111, 101 
-mov 110, 001    // L2:
+mov 110, 001                //Label2
+not 110
+mov 000, 001
+add 110, 000
+add 101, 110
+mov 000, 001
+add 101, 110
+lwd 000, 101
+mov 110, 001
+add 101, 110
+lwd 010, 101 
+add 101, 110
+lwd 001, 111
 add 111, 110
-lwd 001, 101 
-add 111, 110
-lwd 011, 101
-xor 100, 001
-lsl 100 
-mov 110, 000
-add 110, 110 
-mov 100, 000
-add 110, 100 
-bgt 00100       // bgt Case 
-not 001         // Case 2:
-not 011
-mov 100, 001
-add 011, 100
-mov 100, 000
-add 001, 100
-mov 110, 000
-mov 100, 000
-add 110, 000 
-add 100, 010
-add 010, 011 
-add 000, 001
-add 110, 001
-bgt 00101       // bgt FINISH
-beq 01100       // bgt CHECK_LSBs
-not 000         // COMP RESULT:
-not 010
-mov 100, 001
-add 010, 100
-mov 100, 000
-add 000, 100
-add 100, 100
-beq 00101       // beq FINISH
-mov 001, 001    // CHECK_LSBs:
-not 011
-add 011, 001 
-add 100, 011
-add 100, 111
-beq 01101       // beq CLEAR
-bgt 00110       // bgt COMP RESULT
-add 100, 100
-beq 00101       // beq FINISH
-mov 000, 000    // CLEAR: 
-mov 010, 000
-add 100, 100
-beq 00101       // beq FINISH
-mov 100, 000    // Case 1:
-add 100, 000 
-lsl 100 
-mov 110, 000
-add 110, 110  
-mov 100, 000
-add 110, 100 
-bgt 00111       // bgt num1 NEG
-not 001
-not 011
-mov 100, 001
-add 011, 100
-mov 100, 000
-add 001, 100 
-add 100, 100
-beq 01110       // beq DONE
-not 000         // num1 NEG:
-not 010
-mov 100, 001
-add 010, 100
-mov 100, 000
-add 000, 100 
-add 010, 011    // DONE:
-add 000, 001
-mov 110, 001    // FINISH:
-lsl 110
-lsl 110
-lsl 110
-lsl 110
-lsl 110
-lsl 110
-mov 100, 001
-add 110, 100
-add 110, 100 
-lwd 001, 110
+lwd 011, 111
 mov 100, 000
 add 100, 000
-add 000, 001
-bgt 01000       // bgt DONT CHANGE
-beq 01111       // beq CHECK LSBS
-str 100, 110
-mov 001, 001
+rsl 100
+rsl 100
+rsl 100
+rsl 100
+rsl 100
+rsl 100 
+rsl 100
+mov 110, 000
 add 110, 001
-str 010, 110
-add 001, 001
-beq 01000       // beq DONT CHANGE
-mov 001, 001    // CHECK LSBS:
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+add 100, 110
+bgt 00111 
+mov 100, 000
+add 100, 000
+rsl 100
+rsl 100
+rsl 100
+rsl 100
+rsl 100
+rsl 100
+rsl 100
+mov 110, 000
 add 110, 001
-lwd 011, 110
-mov 000, 000
-add 000, 010
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+rsl 110
+add 110, 100 
+bgt 01001
+mov 100, 000 //CheckMSBsofOperand1andOperand2
+add 100, 000
+mov 110, 000
+add 110, 001
+add 100, 110
+beq 01000
+mov 100, 000
+add 100, 000
+mov 110, 000
+add 110, 001
+add 100, 110
+bgt 01001
+not 000     //Operand1 < Operand2 (CalculateResult)
+not 010
+mov 100, 001
+mov 110, 000
+add 010, 100
+add 000, 110
+mov 110, 000
 add 010, 011
-bgt 01000       // bgt DONT CHANGE
-str 000, 110
-mov 011, 001    // DONT CHANGE:
-mov 110, 100
-lsl 110
-lsl 110
-lsl 110
-lsl 110
+add 000, 001
+add 110, 110
+beq 01011
+mov 100, 000 //Operand1 == Operand2LSBs
+add 100, 010
+mov 110, 000
 add 110, 011
+add 100, 110
+beq 01010
+mov 100, 000
+add 100, 010
+mov 110, 000
 add 110, 011
-add 110, 011
-add 110, 011
-lwd 001, 110
-add 001, 100
-bgt 01001       // bgt DONEE
-beq 10000       // beq CHECK LSBS AGAIN
-str 100, 110
-add 110, 011
-str 000, 110
-add 011, 011
-beq 01001       // beq DONEE
-add 110, 011    // CHECK LSBS AGAIN:
-lwd 011, 110
-add 011, 000
-bgt 01001       // bgt DONEE
-str 000, 110
-mov 110, 001    // DONEE: L3:
-add 101, 110
+add 100, 110
+bgt 01001
+add 110, 110
+beq 00111
+not 001 // Operand 1 > Operand 2 (CalculateResult)
+not 011
+mov 100, 001
+mov 110, 000
+add 011, 100
+add 001, 110
+mov 110, 000
+add 010, 011
+add 000, 001
+add 110, 110
+beq 01011
+mov 000, 000    //Operand1 == Operand2 (CalculateResult):
+mov 010, 000
+mov 100, 100 //forcedbranchCheckMinMax:
+lsl 100
+lsl 100
+lsl 100
+lsl 100
+mov 110, 001
+add 100, 110
+add 100, 110
+lwd 001, 100
+add 100, 110
+lwd 011, 100
+mov 100, 000
+add 100, 001
+add 100, 000
+bgt 01101
+mov 100, 000
+add 100, 001
+add 100, 000
+beq 01100
+add 100, 100
+beq 01110
+mov 100, 000    //Check LSBs of Result and Min:
+add 100, 010
+add 100, 011
+bgt 01110
+mov 100, 100    //Minimum > Result
+lsl 100
+lsl 100
+lsl 100
+lsl 100
+mov 110, 001
+add 100, 110
+add 100, 110
+str 000, 100
+add 100, 110
+str 010, 100
+mov 100, 100 //CheckMax
+lsl 100
+lsl 100
+lsl 100
+lsl 100
+mov 110, 001
+add 100, 110
+add 100, 110
+add 100, 110
+add 100, 110
+lwd 001, 100
+add 100, 110
+lwd 011, 100
+mov 100, 000
+add 100, 001
+add 100, 000
+bgt 01111
+mov 100, 000
+add 100, 000
+add 100, 001
+bgt 10000
+add 011, 010
+bgt 01111
+mov 100, 100 // Overwrite
+lsl 100
+lsl 100
+lsl 100
+lsl 100
+mov 110, 001
+add 100, 110
+add 100, 110
+add 100, 110
+add 100, 110
+str 000, 100
+add 100, 110
+str 010, 100
+mov 110, 001    // Done
+add 111, 110
 lsl 110
 lsl 110
 lsl 110
@@ -142,16 +194,15 @@ lsl 110
 lsl 110
 mov 000, 001
 not 000
+mov 001, 001
+add 000, 001
 add 110, 000
 mov 001, 000
-add 001, 000
-add 110, 101
-bgt 01010       // bgt L2
+add 001, 110
+add 110, 111
+bgt 00101
 mov 000, 010
-not 000
-add 001, 000
-mov 110, 001
-add 101, 110
+add 101, 000
 add 001, 101
-bgt 01011       // bgt L1
+bgt 00100
 don 000, 000

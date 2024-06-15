@@ -22,6 +22,15 @@ module JLUT(
     15: Jump = 'd186;
     16: Jump = 'd173;
     
+    17: Jump = 'd2;
+    18: Jump = 'd27;
+    19: Jump = 'd39;
+    20: Jump = 'd66;
+    21: Jump = 'd83;
+    22: Jump = 'd207;
+    23: Jump = 'd238;
+    24: Jump = 'd316;
+    
 	default: Jump = 0;
   endcase
 
