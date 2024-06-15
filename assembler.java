@@ -14,7 +14,7 @@ class assembler {
         try {
             FileReader fr = new FileReader("program2assembly.txt");
             BufferedReader br = new BufferedReader(fr);
-            FileWriter fw = new FileWriter("checkprogram2machine_code.txt");
+            FileWriter fw = new FileWriter("program2machine_code.txt");
 
             String line;
  
